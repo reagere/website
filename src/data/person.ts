@@ -1,0 +1,16 @@
+export const person = {
+  name: 'Baptiste Boussemart',
+  place: 'Avrillé (Angers)',
+  phone: '+33 6 51 75 11 42',
+  phoneHref: 'tel:+33651751142',
+  email: 'baptiste@boussemart.com',
+  linkedin: 'https://www.linkedin.com/in/baptiste-boussemart',
+  linkedinLabel: 'linkedin.com/in/baptiste-boussemart',
+  github: 'https://github.com/b-2-83',
+  githubLabel: 'github.com/b-2-83',
+  noematic: 'https://noematic.eu',
+  noematicEmail: 'contact@noematic.eu',
+  qi: 'https://qi.noematic.eu',
+  painter: 'https://boussemart.com',
+  qori: 'https://qori.fr',
+} as const;

@@ -1,0 +1,33 @@
+---
+import type { Lens } from '../data/angles';
+import { LENS_IDS } from '../data/angles';
+import { lenses, ui } from '../data/lenses';
+import Bi from './Bi.astro';
+import Seal from './Seal.astro';
+
+interface Props {
+  lens: Lens;
+}
+
+const { lens } = Astro.props;
+---
+
+<nav
+  class:list={['compass', lens === 'home' && 'compass--home']}
+  aria-label={ui.readingLabel.fr}
+  data-label-fr={ui.readingLabel.fr}
+  data-label-en={ui.readingLabel.en}
+>
+  {
+    LENS_IDS.map((id) => (
+      <a
+        class="choice"
+        href={lenses[id].href}
+        aria-current={lens === id ? 'page' : undefined}
+      >
+        <Bi text={lenses[id].label} />
+      </a>
+    ))
+  }
+  <Seal />
+</nav>

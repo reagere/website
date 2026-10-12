@@ -1,0 +1,26 @@
+---
+import { person } from '../data/person';
+
+interface Props {
+  jobTitle?: string;
+}
+
+const { jobTitle } = Astro.props;
+const data: Record<string, unknown> = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: person.name,
+  url: new URL('/', Astro.site).href,
+  email: person.email,
+  telephone: person.phone,
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: 'Avrillé',
+    addressCountry: 'FR',
+  },
+  sameAs: [person.linkedin, person.github, person.noematic],
+};
+if (jobTitle) data.jobTitle = jobTitle;
+---
+
+<script type="application/ld+json" set:html={JSON.stringify(data)} />

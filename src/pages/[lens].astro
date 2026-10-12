@@ -1,0 +1,15 @@
+---
+import Base from '../layouts/Base.astro';
+import LensView from '../components/LensView.astro';
+import { LENS_IDS, type LensId } from '../data/angles';
+
+export function getStaticPaths() {
+  return LENS_IDS.map((lens) => ({ params: { lens } }));
+}
+
+const lens = Astro.params.lens as LensId;
+---
+
+<Base lens={lens}>
+  <LensView lens={lens} />
+</Base>

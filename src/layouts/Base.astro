@@ -1,0 +1,103 @@
+---
+import '../styles/global.css';
+import { ClientRouter } from 'astro:transitions';
+import type { Lens } from '../data/angles';
+import { pageMeta, ui } from '../data/lenses';
+import { person } from '../data/person';
+import Compass from '../components/Compass.astro';
+import Bi from '../components/Bi.astro';
+import PersonLd from '../components/PersonLd.astro';
+import type { Copy } from '../data/timeline';
+
+interface Props {
+  lens: Lens;
+  title?: Copy;
+  description?: Copy;
+  robots?: string;
+}
+
+const { lens, title, description, robots } = Astro.props;
+const fallback = pageMeta(lens);
+const meta = {
+  title: title ?? fallback.title,
+  description: description ?? fallback.description,
+};
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const image = new URL('/og.png', Astro.site);
+---
+
+<!doctype html>
+<html lang="fr" data-lens={lens}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{meta.title.fr}</title>
+    <meta name="description" content={meta.description.fr} />
+    <link rel="canonical" href={canonical.href} />
+    <meta property="og:title" content={meta.title.fr} />
+    <meta property="og:description" content={meta.description.fr} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical.href} />
+    <meta property="og:locale" content="fr_FR" />
+    <meta property="og:site_name" content="reagere" />
+    <meta property="og:image" content={image.href} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Sceau reagere, Baptiste Boussemart" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={meta.title.fr} />
+    <meta name="twitter:description" content={meta.description.fr} />
+    <meta name="twitter:image" content={image.href} />
+    {robots && <meta name="robots" content={robots} />}
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <PersonLd />
+    <meta name="theme-color" content="#f4f1ea" />
+    <ClientRouter fallback="swap" />
+  </head>
+  <body
+    data-lens={lens}
+    data-title-fr={meta.title.fr}
+    data-title-en={meta.title.en}
+    data-desc-fr={meta.description.fr}
+    data-desc-en={meta.description.en}
+  >
+    <script is:inline>
+      (function () {
+        var lang = 'fr';
+        try {
+          var stored = localStorage.getItem('reagere-lang');
+          if (stored === 'en' || stored === 'fr') lang = stored;
+        } catch (error) {}
+        document.documentElement.lang = lang;
+        document.documentElement.dataset.lens = document.body.dataset.lens || 'home';
+        var title = document.body.dataset[lang === 'en' ? 'titleEn' : 'titleFr'];
+        var description = document.body.dataset[lang === 'en' ? 'descEn' : 'descFr'];
+        if (title) document.title = title;
+        var meta = document.querySelector('meta[name="description"]');
+        if (meta && description) meta.setAttribute('content', description);
+      })();
+    </script>
+    <a class="skip" href="#contenu">
+      <Bi text={ui.skip} />
+    </a>
+    <div class="page">
+      <header class="top">
+        <a class="word" href="/">re<span>agere</span></a>
+        <div class="langs" role="group" aria-label={ui.langLabel.fr}>
+          <button type="button" data-set-lang="fr" aria-pressed="true">FR</button>
+          <button type="button" data-set-lang="en" aria-pressed="false">EN</button>
+        </div>
+      </header>
+      <Compass lens={lens} />
+      <main id="contenu">
+        <slot />
+      </main>
+      <footer class="foot">
+        <Bi text={{ fr: `© ${new Date().getFullYear()} ${person.name}. ${ui.rights.fr}`, en: `© ${new Date().getFullYear()} ${person.name}. ${ui.rights.en}` }} />
+      </footer>
+    </div>
+    <script>
+      import '../scripts/site.ts';
+    </script>
+  </body>
+</html>

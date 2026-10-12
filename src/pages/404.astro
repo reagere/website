@@ -1,0 +1,14 @@
+---
+import Base from '../layouts/Base.astro';
+import Bi from '../components/Bi.astro';
+import { ui } from '../data/lenses';
+---
+
+<Base lens="home" robots="noindex" title={ui.missingTitle} description={ui.missing}>
+  <h1>
+    <Bi text={ui.missingTitle} />
+  </h1>
+  <p class="lead">
+    <Bi text={ui.missing} />
+  </p>
+</Base>

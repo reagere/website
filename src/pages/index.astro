@@ -1,0 +1,15 @@
+---
+import Base from '../layouts/Base.astro';
+import Bi from '../components/Bi.astro';
+import Contact from '../components/Contact.astro';
+import { homeLead } from '../data/lenses';
+import { person } from '../data/person';
+---
+
+<Base lens="home">
+  <h1>{person.name}</h1>
+  <p class="lead">
+    <Bi text={homeLead} />
+  </p>
+  <Contact class="home-contact" />
+</Base>

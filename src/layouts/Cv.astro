@@ -1,0 +1,102 @@
+---
+import '../styles/cv.css';
+import { person } from '../data/person';
+import { cv, type CvDoc } from '../data/cv';
+import Seal from '../components/Seal.astro';
+import PersonLd from '../components/PersonLd.astro';
+
+interface Props {
+  lang: 'fr' | 'en';
+}
+
+const { lang } = Astro.props;
+const doc: CvDoc = cv[lang];
+const other = lang === 'fr' ? { href: '/cv/en', label: 'English' } : { href: '/cv', label: 'Français' };
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const title = `${person.name} — ${doc.role}`;
+const image = new URL('/og.png', Astro.site);
+const cvFr = new URL('/cv/', Astro.site);
+const cvEn = new URL('/cv/en/', Astro.site);
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={doc.profile[0]} />
+    <link rel="canonical" href={canonical.href} />
+    <link rel="alternate" hreflang="fr" href={cvFr.href} />
+    <link rel="alternate" hreflang="en" href={cvEn.href} />
+    <link rel="alternate" hreflang="x-default" href={cvFr.href} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={doc.profile[0]} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical.href} />
+    <meta property="og:locale" content={lang === 'fr' ? 'fr_FR' : 'en_US'} />
+    <meta property="og:site_name" content="reagere" />
+    <meta property="og:image" content={image.href} />
+    <meta property="og:image:alt" content="Sceau reagere, Baptiste Boussemart" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={doc.profile[0]} />
+    <meta name="twitter:image" content={image.href} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <PersonLd jobTitle={doc.role} />
+    <meta name="theme-color" content="#1b4f72" />
+  </head>
+  <body>
+    <article class="cv">
+      <p class="tools">
+        <a href="/mission">{lang === 'fr' ? 'Retour' : 'Back'}</a>
+        <span>
+          <a href={other.href}>{other.label}</a>
+          {' · '}
+          <button type="button" onclick="print()">{doc.printLabel}</button>
+        </span>
+      </p>
+      <header class="head">
+        <div>
+          <h1>{person.name}</h1>
+          <p class="role">{doc.role}</p>
+          <address class="reach">
+            {person.place}<br />
+            <a href={person.phoneHref}>{person.phone}</a><br />
+            <a href={`mailto:${person.email}`}>{person.email}</a><br />
+            <a href={person.linkedin}>{person.linkedinLabel}</a>
+          </address>
+        </div>
+        <Seal class="seal" />
+      </header>
+      <h2>{lang === 'fr' ? 'Profil' : 'Profile'}</h2>
+      {doc.profile.map((paragraph) => <p>{paragraph}</p>)}
+      <h2>{doc.resultsTitle}</h2>
+      <ul>
+        {doc.results.map((result) => <li>{result}</li>)}
+      </ul>
+      <h2>{doc.pathTitle}</h2>
+      {
+        doc.jobs.map((job) => (
+          <section class="job">
+            <h3>{job.title}</h3>
+            <p class="meta">
+              {job.org} · {job.years}
+            </p>
+            <ul>
+              {job.points.map((point) => <li>{point}</li>)}
+            </ul>
+          </section>
+        ))
+      }
+      <h2>{doc.practiceTitle}</h2>
+      <p>{doc.practice}</p>
+      <h2>{doc.studiesTitle}</h2>
+      <ul>
+        {doc.studies.map((line) => <li>{line}</li>)}
+      </ul>
+      <h2>{doc.languagesTitle}</h2>
+      <p>{doc.languages}</p>
+    </article>
+  </body>
+</html>

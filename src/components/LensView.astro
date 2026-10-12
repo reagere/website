@@ -1,0 +1,180 @@
+---
+import type { LensId } from '../data/angles';
+import { lenses, ui } from '../data/lenses';
+import { entriesFor } from '../data/timeline';
+import { person } from '../data/person';
+import Bi from './Bi.astro';
+import Contact from './Contact.astro';
+
+interface Props {
+  lens: LensId;
+}
+
+const { lens } = Astro.props;
+const copy = lenses[lens];
+const showPath = lens === 'mission' || lens === 'editions';
+const path = showPath ? entriesFor(lens) : null;
+---
+
+<h1>{person.name}</h1>
+<p class="lead">
+  <Bi text={copy.sentence} />
+</p>
+
+<section class="block">
+  <ol class="proofs">
+    {
+      copy.proofs.map((proof, index) => (
+        <li>
+          <span class="n">{String(index + 1).padStart(2, '0')}</span>
+          <Bi text={proof} block />
+        </li>
+      ))
+    }
+  </ol>
+</section>
+
+{
+  copy.skills && (
+    <section class="block">
+      <h2>
+        <Bi text={ui.practice} />
+      </h2>
+      <Bi text={copy.skills} block />
+    </section>
+  )
+}
+
+{
+  copy.line && (
+    <section class="block">
+      <h2>
+        <Bi text={ui.line} />
+      </h2>
+      <blockquote class="pull">
+        <Bi text={copy.line.quote} block />
+        <footer>
+          <Bi text={copy.line.source} />
+        </footer>
+      </blockquote>
+    </section>
+  )
+}
+
+{
+  path && (
+    <section class="block">
+      <h2>
+        <Bi text={ui.path} />
+      </h2>
+      <ol class="years">
+        {path.open.map((entry) => (
+          <li>
+            <span class="when">{entry.years}</span>
+            <div>
+              <p class="role">
+                <Bi text={entry.title} />
+              </p>
+              <p class="org">
+                <Bi text={entry.org} />
+              </p>
+              {entry.detail?.[lens] && <Bi class="detail" text={entry.detail[lens]} block />}
+            </div>
+          </li>
+        ))}
+      </ol>
+    </section>
+  )
+}
+
+{
+  path && path.quiet.length > 0 && (
+    <section class="block">
+      <h2>
+        <Bi text={ui.also} />
+      </h2>
+      <ol class="years">
+        {path.quiet.map((entry) => (
+          <li class="quiet">
+            <span class="when">{entry.years}</span>
+            <div>
+              <p class="role">
+                <Bi text={entry.title} />
+              </p>
+              <p class="org">
+                <Bi text={entry.org} />
+              </p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </section>
+  )
+}
+
+{
+  copy.shelves?.map((shelf) => (
+    <section class="block">
+      <h2>
+        <Bi text={shelf.title} />
+      </h2>
+      <ul class="shelf">
+        {shelf.items.map((item) => (
+          <li>
+            {item.href ? (
+              <a href={item.href}>
+                <span class="sn">{item.name}</span>
+                <Bi class="sd" text={item.text} />
+              </a>
+            ) : (
+              <span>
+                <span class="sn">{item.name}</span>
+                <Bi class="sd" text={item.text} />
+              </span>
+            )}
+          </li>
+        ))}
+      </ul>
+    </section>
+  ))
+}
+
+{
+  copy.marks && (
+    <section class="block">
+      <h2>
+        <Bi text={ui.marks} />
+      </h2>
+      <ol class="marks">
+        {copy.marks.map((mark) => (
+          <li>
+            <span class="when">{mark.years}</span>
+            <Bi text={mark.text} block />
+          </li>
+        ))}
+      </ol>
+    </section>
+  )
+}
+
+{
+  copy.door && (
+    <a class="door" href={copy.door.href}>
+      <span class="door-kicker">{copy.door.kicker}</span>
+      <span class="door-label">
+        <Bi text={copy.door.label} />
+      </span>
+    </a>
+  )
+}
+
+{
+  lens === 'mission' && (
+    <p class="print-link">
+      <a data-lang="fr" href="/cv">{ui.print.fr}</a>
+      <a data-lang="en" href="/cv/en">{ui.print.en}</a>
+    </p>
+  )
+}
+
+<Contact />

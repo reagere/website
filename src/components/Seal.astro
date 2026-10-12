@@ -1,0 +1,128 @@
+---
+interface Props {
+  class?: string;
+}
+
+const { class: className = 'seal' } = Astro.props;
+---
+
+<svg
+  class={className}
+  viewBox="0 0 200 200"
+  fill="currentColor"
+  aria-hidden="true"
+  transition:persist="seal"
+>
+  <path d="M 169.61 38.00 C 169.61 30.59 163.61 24.59 156.20 24.59 C 148.79 24.59 142.79 30.59 142.79 38.00 C 142.79 45.41 148.79 51.41 156.20 51.41 C 163.61 51.41 169.61 45.41 169.61 38.00 Z" />
+  <path d="M 163.97 68.25 C 170.71 77.68 172.05 99.26 172.05 99.26 C 172.13 133.26 150.41 154.43 150.41 154.43 C 126.71 180.12 96.10 180.23 96.10 180.23 C 58.81 182.79 35.74 158.76 35.74 158.76 C 7.68 130.74 10.77 102.61 9.77 99.26 C 10.19 63.15 32.03 43.29 35.74 39.76 C 62.40 14.35 95.88 18.36 96.10 18.28 C 122.21 19.79 139.68 34.40 139.68 34.40 C 141.26 24.88 150.21 22.81 150.21 22.81 C 146.81 21.38 129.62 6.85 96.10 7.62 C 70.79 8.20 49.01 19.70 32.25 36.97 C 6.00 64.98 7.86 99.26 7.86 99.26 C 7.52 137.37 32.23 161.51 32.23 161.51 C 59.57 191.10 94.70 190.83 94.70 190.83 C 135.78 193.15 161.85 166.55 161.85 166.55 C 194.00 136.53 191.25 99.26 191.25 99.26 C 191.24 76.20 184.93 62.35 184.02 60.14 C 183.10 57.93 179.72 51.30 179.29 51.19 C 178.86 51.08 178.53 51.41 178.53 51.41 C 175.73 53.02 166.99 61.80 163.90 67.03 C 163.90 67.03 163.59 67.72 163.97 68.25 Z" />
+  <g class="joint joint-arm">
+    <g class="life life-arm">
+      <path class="brush" d="M 38.55 51.89 C 37.14 52.05 37.12 50.97 38.45 50.87 C 39.04 50.82 161.78 39.37 148.07 73.32 C 137.76 98.85 37.13 91.55 35.17 91.55 C 33.21 91.55 37.13 81.24 37.13 81.24 C 37.13 81.24 135.92 95.19 144.89 70.74 C 154.44 44.72 55.47 50.00 38.55 51.89 Z" />
+    </g>
+  </g>
+  <g class="joint joint-head">
+    <g class="life life-head">
+      <path class="brush" d="M 81.80 66.17 C 81.80 66.17 96.03 63.23 101.43 65.19 C 106.83 67.15 93.58 78.44 88.67 81.39 C 83.76 84.33 82.29 80.90 82.29 80.90 C 82.29 80.90 79.35 68.63 81.80 66.17 Z" />
+    </g>
+  </g>
+  <g class="joint joint-legs">
+    <g class="life life-legs">
+      <path class="brush" d="M 80.39 95.62 C 80.39 95.62 60.37 125.89 30.14 144.87 C 26.97 146.86 57.63 144.87 57.63 144.87 L 84.32 99.55 C 84.32 99.55 122.54 142.58 126.02 144.87 C 126.40 145.12 155.24 146.85 149.60 144.03 C 144.76 141.61 85.30 96.60 88.25 95.13 C 91.19 93.66 80.39 95.62 80.39 95.62 Z" />
+    </g>
+  </g>
+</svg>
+
+<style>
+  .seal {
+    --arm-pose: 0deg;
+    --look: 0deg;
+    --lean: 0deg;
+    --ax: 73.014%;
+    --ay: 36.029%;
+    --anx: -73.014%;
+    --any: -36.029%;
+    --hx: 43.294%;
+    --hy: 41.211%;
+    --hnx: -43.294%;
+    --hny: -41.211%;
+    --lx: 41.313%;
+    --ly: 48.222%;
+    --lnx: -41.313%;
+    --lny: -48.222%;
+  }
+
+  .brush {
+    stroke: currentColor;
+    stroke-width: 0.982;
+    stroke-linejoin: miter;
+    stroke-miterlimit: 4;
+    stroke-linecap: butt;
+  }
+
+  /* Percentages of the viewBox: the joint stays put at any rendered size.
+     The bar and the raised arm are one stroke, so the turn stays small. */
+  .joint,
+  .life {
+    transform-box: view-box;
+    transform-origin: 0 0;
+  }
+  .joint {
+    transition: transform 0.7s cubic-bezier(0.22, 0.7, 0.3, 1);
+  }
+  .joint-arm {
+    transform: translate(var(--ax), var(--ay)) rotate(var(--arm-pose)) translate(var(--anx), var(--any));
+  }
+  .joint-head {
+    transform: translate(var(--hx), var(--hy)) rotate(var(--look)) translate(var(--hnx), var(--hny));
+  }
+  .joint-legs {
+    transform: translate(var(--lx), var(--ly)) rotate(var(--lean)) translate(var(--lnx), var(--lny));
+  }
+
+  .life-arm { animation: seal-arm 4.6s ease-in-out infinite; }
+  .life-head { animation: seal-head 4.6s ease-in-out infinite; }
+  .life-legs { animation: seal-legs 4.6s ease-in-out infinite; }
+
+  @keyframes seal-arm {
+    0%, 100% { transform: translate(var(--ax), var(--ay)) rotate(-1.2deg) translate(var(--anx), var(--any)); }
+    50% { transform: translate(var(--ax), var(--ay)) rotate(1.2deg) translate(var(--anx), var(--any)); }
+  }
+  @keyframes seal-head {
+    0%, 100% { transform: translate(var(--hx), var(--hy)) rotate(-1.4deg) translate(var(--hnx), var(--hny)) translateY(0.5%); }
+    50% { transform: translate(var(--hx), var(--hy)) rotate(1.4deg) translate(var(--hnx), var(--hny)) translateY(-0.5%); }
+  }
+  @keyframes seal-legs {
+    0%, 100% { transform: translate(var(--lx), var(--ly)) rotate(-0.8deg) translate(var(--lnx), var(--lny)); }
+    50% { transform: translate(var(--lx), var(--ly)) rotate(0.8deg) translate(var(--lnx), var(--lny)); }
+  }
+
+  :global(html[data-lens="mission"]) .seal {
+    --arm-pose: -2.2deg;
+    --look: -1.5deg;
+    --lean: -0.7deg;
+  }
+  :global(html[data-lens="produit"]) .seal {
+    --arm-pose: 1.8deg;
+    --look: 1deg;
+    --lean: 0.5deg;
+  }
+  :global(html[data-lens="editions"]) .seal {
+    --arm-pose: 1.2deg;
+    --look: 0.4deg;
+    --lean: -0.35deg;
+  }
+  :global(html[data-lens="portfolio"]) .seal {
+    --arm-pose: -1.6deg;
+    --look: -0.8deg;
+    --lean: 0.6deg;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .life { animation: none; }
+    .joint { transition: none; }
+  }
+  @media print {
+    .life { animation: none; }
+    .joint { transition: none; }
+  }
+</style>

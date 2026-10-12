@@ -1,0 +1,17 @@
+---
+import { person } from '../data/person';
+
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+---
+
+<address class:list={['contact', className]}>
+  <span>{person.place}</span>
+  <a href={person.phoneHref}>{person.phone}</a>
+  <a href={`mailto:${person.email}`}>{person.email}</a>
+  <a href={person.linkedin}>LinkedIn</a>
+  <a href={person.github}>GitHub</a>
+</address>

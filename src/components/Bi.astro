@@ -1,0 +1,15 @@
+---
+import type { Copy } from '../data/timeline';
+
+interface Props {
+  text: Copy;
+  block?: boolean;
+  class?: string;
+}
+
+const { text, block = false, class: className } = Astro.props;
+const Tag = block ? 'p' : 'span';
+---
+
+<Tag data-lang="fr" class={className}>{text.fr}</Tag>
+<Tag data-lang="en" class={className}>{text.en}</Tag>
